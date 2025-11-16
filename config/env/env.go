@@ -9,8 +9,9 @@ import (
 )
 
 type Env struct {
-	Port        string
-	Environment string
+	Port         string
+	Environment  string
+	DATABASE_URL string
 }
 
 /**
@@ -36,6 +37,10 @@ func (e *Env) Validate() error {
 		return fmt.Errorf("ENVIRONMENT must be one of 'development', 'production', or 'staging'")
 	}
 
+	if e.DATABASE_URL == "" {
+		return fmt.Errorf("DATABASE_URL is required")
+	}
+
 	return nil
 }
 
@@ -48,8 +53,9 @@ func LoadEnv() *Env {
 	}
 
 	env := &Env{
-		Port:        getEnv("PORT", "8000"),
-		Environment: getEnv("ENVIRONMENT", "development"),
+		Port:         getEnv("PORT", "8000"),
+		Environment:  getEnv("ENVIRONMENT", "development"),
+		DATABASE_URL: getEnv("DATABASE_URL", ""),
 	}
 
 	if err := env.Validate(); err != nil {
